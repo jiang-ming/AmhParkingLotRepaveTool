@@ -167,6 +167,7 @@
             this.Controls.Add(this.axLicenseControl1);
             this.Name = "frmMain";
             this.Text = "Amherst Engine";
+            this.Load += new System.EventHandler(this.frmMain_Load);
             ((System.ComponentModel.ISupportInitialize)(this.axLicenseControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.axToolbarControl1)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
