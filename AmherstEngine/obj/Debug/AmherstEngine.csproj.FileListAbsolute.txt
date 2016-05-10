@@ -6,6 +6,4 @@ H:\Projects\2_LiveProject\ArcEngine\AmherstEngine\AmherstEngine\obj\Debug\Amhers
 H:\Projects\2_LiveProject\ArcEngine\AmherstEngine\AmherstEngine\obj\Debug\AmherstEngine.csproj.GenerateResource.Cache
 H:\Projects\2_LiveProject\ArcEngine\AmherstEngine\AmherstEngine\obj\Debug\AmherstEngine.exe
 H:\Projects\2_LiveProject\ArcEngine\AmherstEngine\AmherstEngine\obj\Debug\AmherstEngine.pdb
-H:\Projects\2_LiveProject\ArcEngine\AmherstEngine\AmherstEngine\obj\Debug\AmherstEngine.g.resources
 H:\Projects\2_LiveProject\ArcEngine\AmherstEngine\AmherstEngine\obj\Debug\AmherstEngine.csprojResolveAssemblyReference.cache
-H:\Projects\2_LiveProject\ArcEngine\AmherstEngine\AmherstEngine\bin\Debug\Commands\OpenNewMapDocument.bmp

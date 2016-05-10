@@ -37,10 +37,18 @@ namespace AmherstEngine
             m_controlsSynchronizer.BindControls(true);
             m_controlsSynchronizer.AddFrameworkControl(axToolbarControl1.Object);
             m_controlsSynchronizer.AddFrameworkControl(axTOCControl1.Object);
-            OpenNewMapDocument openMapDoc = new OpenNewMapDocument(m_controlsSynchronizer);
+            Commands.OpenNewMapDocument openMapDoc = new Commands.OpenNewMapDocument(m_controlsSynchronizer);
             axToolbarControl1.AddItem(openMapDoc, -1, 0, false, -1, esriCommandStyles.esriCommandStyleIconOnly);
             
 
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (this.tabControl1.SelectedIndex == 0)
+                m_controlsSynchronizer.ActivateMap();
+            else
+                m_controlsSynchronizer.ActivatePageLayout();
         }
     }
 }

@@ -6,15 +6,14 @@ using ESRI.ArcGIS.ADF.BaseClasses;
 using ESRI.ArcGIS.ADF.CATIDs;
 using ESRI.ArcGIS.Controls;
 using ESRI.ArcGIS.Carto;
-
-namespace AmherstEngine
+namespace AmherstEngine.Commands
 {
     /// <summary>
     /// Command that works in ArcMap/Map/PageLayout
     /// </summary>
-    [Guid("a5dc3aed-7a02-4c19-99e0-8fdb4877b73a")]
+    [Guid("f51d0efc-b83a-4892-8f0c-76a8ca9a400e")]
     [ClassInterface(ClassInterfaceType.None)]
-    [ProgId("AmherstEngine.OpenNewMapDocument")]
+    [ProgId("AmherstEngine.Commands.OpenNewMapDocument")]
     public sealed class OpenNewMapDocument : BaseCommand
     {
         #region COM Registration Function(s)
@@ -66,7 +65,6 @@ namespace AmherstEngine
 
         #endregion
         #endregion
-
         private IHookHelper m_hookHelper = null;
         private ControlsSynchronizer m_controlsSynchronizer = null;
         private string m_sDocumentPath = string.Empty;
@@ -113,6 +111,7 @@ namespace AmherstEngine
                 m_hookHelper = new HookHelperClass();
             m_hookHelper.Hook = hook;
 
+            // TODO:  Add other initialization code
         }
 
         /// <summary>
@@ -124,11 +123,11 @@ namespace AmherstEngine
             dlg.Filter = "Map Documents (*.mxd)|*.mxd";
             dlg.Multiselect = false;
             dlg.Title = "Open Map Document";
-            if (dlg.ShowDialog()==DialogResult.OK)
+            if (dlg.ShowDialog() == DialogResult.OK)
             {
                 string docName = dlg.FileName;
                 IMapDocument mapDoc = new MapDocumentClass();
-                if (mapDoc.get_IsPresent(docName)&& !mapDoc.get_IsPasswordProtected(docName))
+                if (mapDoc.get_IsPresent(docName) && !mapDoc.get_IsPasswordProtected(docName))
                 {
                     mapDoc.Open(docName, string.Empty);
                     //set the first map as the active view
@@ -143,10 +142,10 @@ namespace AmherstEngine
         }
 
         #endregion
-
         public string DocumentFileName
         {
             get { return m_sDocumentPath; }
         }
+
     }
 }
