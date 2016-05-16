@@ -7,3 +7,4 @@ H:\Projects\2_LiveProject\ArcEngine\AmherstEngine\AmherstEngine\obj\Debug\Amhers
 H:\Projects\2_LiveProject\ArcEngine\AmherstEngine\AmherstEngine\obj\Debug\AmherstEngine.exe
 H:\Projects\2_LiveProject\ArcEngine\AmherstEngine\AmherstEngine\obj\Debug\AmherstEngine.pdb
 H:\Projects\2_LiveProject\ArcEngine\AmherstEngine\AmherstEngine\obj\Debug\AmherstEngine.csprojResolveAssemblyReference.cache
+H:\Projects\2_LiveProject\ArcEngine\AmherstEngine\AmherstEngine\obj\Debug\AmherstEngine.SymbolSelectorFrm.resources
