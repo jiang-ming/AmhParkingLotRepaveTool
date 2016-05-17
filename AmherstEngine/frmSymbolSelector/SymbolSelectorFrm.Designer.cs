@@ -121,18 +121,30 @@
             // 
             // nudAngle
             // 
+            this.nudAngle.DecimalPlaces = 1;
             this.nudAngle.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
             this.nudAngle.Location = new System.Drawing.Point(93, 121);
+            this.nudAngle.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+            this.nudAngle.Minimum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            -2147483648});
             this.nudAngle.Name = "nudAngle";
             this.nudAngle.Size = new System.Drawing.Size(90, 20);
             this.nudAngle.TabIndex = 7;
             // 
             // nudWidth
             // 
+            this.nudWidth.DecimalPlaces = 1;
             this.nudWidth.Increment = new decimal(new int[] {
             1,
             0,
@@ -145,12 +157,18 @@
             // 
             // nudSize
             // 
+            this.nudSize.DecimalPlaces = 1;
             this.nudSize.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
             this.nudSize.Location = new System.Drawing.Point(93, 58);
+            this.nudSize.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
             this.nudSize.Name = "nudSize";
             this.nudSize.Size = new System.Drawing.Size(90, 20);
             this.nudSize.TabIndex = 5;
