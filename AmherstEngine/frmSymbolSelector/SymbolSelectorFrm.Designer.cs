@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SymbolSelectorFrm));
             this.axSymbologyControl1 = new ESRI.ArcGIS.Controls.AxSymbologyControl();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -44,8 +45,11 @@
             this.lblSize = new System.Windows.Forms.Label();
             this.lblColor = new System.Windows.Forms.Label();
             this.btnOk = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnMoreStyle = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.contextMenuStripMoreSymbol = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.axSymbologyControl1)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ptbPreview)).BeginInit();
@@ -110,6 +114,7 @@
             this.btnOutlineColor.Size = new System.Drawing.Size(90, 23);
             this.btnOutlineColor.TabIndex = 9;
             this.btnOutlineColor.UseVisualStyleBackColor = true;
+            this.btnOutlineColor.Click += new System.EventHandler(this.btnOutlineColor_Click);
             // 
             // btnColor
             // 
@@ -118,15 +123,11 @@
             this.btnColor.Size = new System.Drawing.Size(90, 23);
             this.btnColor.TabIndex = 8;
             this.btnColor.UseVisualStyleBackColor = true;
+            this.btnColor.Click += new System.EventHandler(this.btnColor_Click);
             // 
             // nudAngle
             // 
             this.nudAngle.DecimalPlaces = 1;
-            this.nudAngle.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
             this.nudAngle.Location = new System.Drawing.Point(93, 121);
             this.nudAngle.Maximum = new decimal(new int[] {
             360,
@@ -141,28 +142,20 @@
             this.nudAngle.Name = "nudAngle";
             this.nudAngle.Size = new System.Drawing.Size(90, 20);
             this.nudAngle.TabIndex = 7;
+            this.nudAngle.ValueChanged += new System.EventHandler(this.nudAngle_ValueChanged);
             // 
             // nudWidth
             // 
             this.nudWidth.DecimalPlaces = 1;
-            this.nudWidth.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
             this.nudWidth.Location = new System.Drawing.Point(93, 90);
             this.nudWidth.Name = "nudWidth";
             this.nudWidth.Size = new System.Drawing.Size(90, 20);
             this.nudWidth.TabIndex = 6;
+            this.nudWidth.ValueChanged += new System.EventHandler(this.nudWidth_ValueChanged);
             // 
             // nudSize
             // 
             this.nudSize.DecimalPlaces = 1;
-            this.nudSize.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
             this.nudSize.Location = new System.Drawing.Point(93, 58);
             this.nudSize.Maximum = new decimal(new int[] {
             200,
@@ -172,6 +165,7 @@
             this.nudSize.Name = "nudSize";
             this.nudSize.Size = new System.Drawing.Size(90, 20);
             this.nudSize.TabIndex = 5;
+            this.nudSize.ValueChanged += new System.EventHandler(this.nudSize_ValueChanged);
             // 
             // lblOutlineColor
             // 
@@ -229,14 +223,15 @@
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
-            // button1
+            // btnMoreStyle
             // 
-            this.button1.Location = new System.Drawing.Point(403, 380);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "More...";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnMoreStyle.Location = new System.Drawing.Point(403, 380);
+            this.btnMoreStyle.Name = "btnMoreStyle";
+            this.btnMoreStyle.Size = new System.Drawing.Size(75, 23);
+            this.btnMoreStyle.TabIndex = 5;
+            this.btnMoreStyle.Text = "More...";
+            this.btnMoreStyle.UseVisualStyleBackColor = true;
+            this.btnMoreStyle.Click += new System.EventHandler(this.btnMoreStyle_Click);
             // 
             // btnCancel
             // 
@@ -249,13 +244,23 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // contextMenuStripMoreSymbol
+            // 
+            this.contextMenuStripMoreSymbol.Name = "contextMenuStripMoreSymbol";
+            this.contextMenuStripMoreSymbol.Size = new System.Drawing.Size(61, 4);
+            this.contextMenuStripMoreSymbol.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStripMoreSymbol_ItemClicked);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // SymbolSelectorFrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(509, 533);
             this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnMoreStyle);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -292,7 +297,10 @@
         private System.Windows.Forms.Label lblSize;
         private System.Windows.Forms.Label lblColor;
         private System.Windows.Forms.Button btnOk;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnMoreStyle;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.ColorDialog colorDialog1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripMoreSymbol;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }

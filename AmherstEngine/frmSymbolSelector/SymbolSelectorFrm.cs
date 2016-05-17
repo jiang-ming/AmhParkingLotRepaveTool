@@ -23,7 +23,8 @@ namespace AmherstEngine
         private ILayer pLayer;
         public ISymbol pSymbol;
         public Image pSymbolImage;
-
+        bool contextMenuMoreSymbolInitiated = false;
+        string sInstall;
         public SymbolSelectorFrm(ILegendClass tempLegendClass, ILayer tempLayer)
         {
             InitializeComponent();
@@ -66,7 +67,7 @@ namespace AmherstEngine
         private void SymbolSelectorFrm_Load(object sender, EventArgs e)
         {
             //get ArcGIS install directory
-            string sInstall = ReadRegistry("SOFTWARE\\Wow6432Node\\ESRI\\Engine10.3\\CoreRuntime");
+            sInstall = ReadRegistry("SOFTWARE\\Wow6432Node\\ESRI\\Engine10.3\\CoreRuntime");
             // load ESRI.ServerStyle file to SymbologyControl
             this.axSymbologyControl1.LoadStyleFile(sInstall + "\\Styles\\ESRI.ServerStyle");
             // identify layer type (point, line, polygon), set StyleClass of SymbologyControl. set visibility of each control
@@ -125,7 +126,7 @@ namespace AmherstEngine
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            
+
             this.pSymbol = (ISymbol)pStyleGalleryItem.Item;
             this.pSymbolImage = this.ptbPreview.Image;
             this.Close();
@@ -227,12 +228,177 @@ namespace AmherstEngine
                     color = Color.Black;
                     break;
             }
-            this.btnColor.BackColor=color;
+            this.btnColor.BackColor = color;
+            this.PreviewImage();
         }
+
+        private void nudSize_ValueChanged(object sender, EventArgs e)
+        {
+            ((IMarkerSymbol)this.pStyleGalleryItem.Item).Size = (double)this.nudSize.Value;
+            this.PreviewImage();
+        }
+
+        private void nudAngle_ValueChanged(object sender, EventArgs e)
+        {
+            ((IMarkerSymbol)this.pStyleGalleryItem.Item).Angle = (double)this.nudAngle.Value;
+            this.PreviewImage();
+        }
+
+        private void nudWidth_ValueChanged(object sender, EventArgs e)
+        {
+            switch (this.axSymbologyControl1.StyleClass)
+            {
+                case esriSymbologyStyleClass.esriStyleClassLineSymbols:
+                    ((ILineSymbol)this.pStyleGalleryItem.Item).Width = Convert.ToDouble(this.nudWidth.Value);
+                    break;
+                case esriSymbologyStyleClass.esriStyleClassFillSymbols:
+                    ILineSymbol pLineSymbol = ((IFillSymbol)this.pStyleGalleryItem.Item).Outline;
+                    pLineSymbol.Width = Convert.ToDouble(this.nudWidth.Value);
+                    ((IFillSymbol)this.pStyleGalleryItem.Item).Outline = pLineSymbol;
+                    break;
+            }
+            this.PreviewImage();
+        }
+
+        /// <summary>
+        /// Convert IRgbColor from ArcGIS Engine to Color in .NET
+        /// </summary>
+        /// <param name="pRgbColor"></param>
+        /// <returns>System.Drawing.Color in .Net, which represents color in ARGB</returns>
         public Color ConvertIRgbColorToColor(IColor pRgbColor)
         {
             return ColorTranslator.FromOle(pRgbColor.RGB);
         }
+
+        /// <summary>
+        /// Convert Color in .NET to IColor in ArcGIS Engine
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        public IColor ConvertColorToIColor(Color color)
+        {
+            IColor pColor = new RgbColorClass();
+            pColor.RGB = color.B * 65536 + color.G * 256 + color.R;
+            return pColor;
+        }
+        /// <summary>
+        /// With ColorDialog provided by .NET, change back color of btnColor
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnColor_Click(object sender, EventArgs e)
+        {
+            if (this.colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                this.btnColor.BackColor = this.colorDialog1.Color;
+                switch (this.axSymbologyControl1.StyleClass)
+                {
+                    //point
+                    case esriSymbologyStyleClass.esriStyleClassMarkerSymbols:
+                        ((IMarkerSymbol)this.pStyleGalleryItem.Item).Color = this.ConvertColorToIColor(this.colorDialog1.Color);
+                        break;
+                    //line
+                    case esriSymbologyStyleClass.esriStyleClassLineSymbols:
+                        ((ILineSymbol)this.pStyleGalleryItem.Item).Color = this.ConvertColorToIColor(this.colorDialog1.Color);
+                        break;
+                    //polygon
+                    case esriSymbologyStyleClass.esriStyleClassFillSymbols:
+                        ((IFillSymbol)this.pStyleGalleryItem.Item).Color = this.ConvertColorToIColor(this.colorDialog1.Color);
+                        break;
+                }
+                this.PreviewImage();
+            }
+        }
+        /// <summary>
+        /// update polygon outline color
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnOutlineColor_Click(object sender, EventArgs e)
+        {
+            if (this.colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                //get outline symbol from polygon symbol
+                ILineSymbol pLineSymbol = ((IFillSymbol)this.pStyleGalleryItem.Item).Outline;
+                //set outline color
+                pLineSymbol.Color = this.ConvertColorToIColor(this.colorDialog1.Color);
+                //reset outline color of polygon symbol
+                ((IFillSymbol)this.pStyleGalleryItem.Item).Outline = pLineSymbol;
+                //set button color
+                this.btnOutlineColor.BackColor = this.colorDialog1.Color;
+                this.PreviewImage();
+            }
+        }
+        /// <summary>
+        /// More style class
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnMoreStyle_Click(object sender, EventArgs e)
+        {
+            if (this.contextMenuMoreSymbolInitiated == false)
+            {
+                // string sInstall = ReadRegistry();
+                string path = System.IO.Path.Combine(sInstall, "Styles");
+                //get styles count
+                string[] styleNames = System.IO.Directory.GetFiles(path, "*.ServerStyle");
+                ToolStripMenuItem[] symbolContextMenuItem = new ToolStripMenuItem[styleNames.Length + 1];
+                //add all style classes into menu
+                for (int i = 0; i < styleNames.Length; i++)
+                {
+                    symbolContextMenuItem[i] = new ToolStripMenuItem();
+                    symbolContextMenuItem[i].CheckOnClick = true;
+                    symbolContextMenuItem[i].Text = System.IO.Path.GetFileNameWithoutExtension(styleNames[i]);
+                    if (symbolContextMenuItem[i].Text == "ESRI")
+                    {
+                        symbolContextMenuItem[i].Checked = true;
+                    }
+                    symbolContextMenuItem[i].Name = styleNames[i];
+                }
+                //Add "More symbols" menu to last
+                symbolContextMenuItem[styleNames.Length] = new ToolStripMenuItem();
+                symbolContextMenuItem[styleNames.Length].Text = "Add more symbols";
+                symbolContextMenuItem[styleNames.Length].Name = "AddMoreSymbol";
+                // add all menu item into menu
+                this.contextMenuStripMoreSymbol.Items.AddRange(symbolContextMenuItem);
+                this.contextMenuMoreSymbolInitiated = true;
+            }
+            this.contextMenuStripMoreSymbol.Show(this.btnMoreStyle.Location);
+
+        }
+        /// <summary>
+        /// click menu item will select the item, and import the selected ServerStyle file into SymbologyControl and refresh
+        /// When click "Add more Symbols" menu item, open dialog and let user select other ServerStyle file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void contextMenuStripMoreSymbol_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            ToolStripMenuItem pToolStripMenuItem = (ToolStripMenuItem)e.ClickedItem;
+            //if select "Add more symbols"
+            if (pToolStripMenuItem.Name=="AddMoreSymbol")
+            {
+                if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    this.axSymbologyControl1.LoadStyleFile(this.openFileDialog1.FileName);
+                    this.axSymbologyControl1.Refresh();
+                }
+            }
+            else
+            {
+                if (pToolStripMenuItem.Checked == false)
+                {
+                    this.axSymbologyControl1.LoadStyleFile(pToolStripMenuItem.Name);
+                    this.axSymbologyControl1.Refresh();
+                }
+                else
+                {
+                    this.axSymbologyControl1.RemoveFile(pToolStripMenuItem.Name);
+                    this.axSymbologyControl1.Refresh();
+                }
+            }
+        }
+
 
     }
 }
